@@ -12,6 +12,51 @@ class HashTableEntry:
 MIN_CAPACITY = 8
 
 
+class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def find(self, key):
+        current = self.head
+
+        while current is not None:
+            if current.key == key:
+                return current
+            current = current.next
+
+        return current
+
+    def update_or_else_insert_at_head(self, key, value):
+        # check if the key is already in the linked list
+        # find the node
+        current = self.head
+        while current is not None:
+            # if key is found, change the value
+            if current.key == key:
+                current.value = value
+                # exit function immediately
+                return
+            current = current.next
+
+        # if we reach the end of the list, it's not here!
+        # make a new node, and insert at head
+        new_node = HashTableEntry(key, value)
+        new_node.next = self.head
+        self.head = new_node
+
+    def delete(self, key):
+        # index = self.hash_index(key)
+        # self.list[index] = None
+        current = self.head
+        while current:
+            if current.key == key:
+                self.head = self.head.next
+                current.next = None
+                return
+            current = current.next
+
+
 class HashTable:
     """
     A hash table that with `capacity` buckets
@@ -85,14 +130,15 @@ class HashTable:
         # Your code here
         index = self.hash_index(key)
         current = self.list[index]
-        while current:
-            if current.key == key:
-                current.value = value
-                return value
-            current = current.next
+        if current == None:
+            self.list[index] = LinkedList()
+        self.list[index].update_or_else_insert_at_head(key, value)
+        # if current.value !== None:
+        #     current.value = LinkedList().head
+        #     HashTableEntry(key, value).next = current.value
 
-        hash_entry = HashTableEntry(key, value)
-        self.list[index] = hash_entry
+        # hash_entry = HashTableEntry(key, value)
+        # self.list[index] = hash_entry
 
     def delete(self, key):
         """
@@ -104,7 +150,7 @@ class HashTable:
         """
         # Your code here
         index = self.hash_index(key)
-        self.list[index] = None
+        self.list[index].delete(key)
 
     def get(self, key):
         """
@@ -117,7 +163,7 @@ class HashTable:
         # Your code here
         if key and self.list[self.hash_index(key)]:
             # print(self.list[self.hash_index(key)].value)
-            return self.list[self.hash_index(key)].value
+            return self.list[self.hash_index(key)].find(key).value
 
         else:
             return None
