@@ -19,12 +19,12 @@ class HashTable:
 
     Implement this.
     """
-
     def __init__(self, capacity):
         # Your code here
+        self.capacity = capacity
+        self.list = [None] * capacity
 
-
-    def get_num_slots(self):
+        # def get_num_slots(self):
         """
         Return the length of the list you're using to hold the hash
         table data. (Not the number of items stored in the hash table,
@@ -36,7 +36,6 @@ class HashTable:
         """
         # Your code here
 
-
     def get_load_factor(self):
         """
         Return the load factor for this hash table.
@@ -44,7 +43,6 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
 
     def fnv1(self, key):
         """
@@ -55,7 +53,6 @@ class HashTable:
 
         # Your code here
 
-
     def djb2(self, key):
         """
         DJB2 hash, 32-bit
@@ -64,6 +61,10 @@ class HashTable:
         """
         # Your code here
 
+        hash = 5381
+        for x in key:
+            hash = (hash * 33) + ord(x)
+        return hash
 
     def hash_index(self, key):
         """
@@ -83,6 +84,10 @@ class HashTable:
         """
         # Your code here
 
+        index = self.hash_index(key)
+        print(f"{key} -> {index}")
+        hash_entry = HashTableEntry(key, value)
+        self.list[index] = hash_entry
 
     def delete(self, key):
         """
@@ -93,7 +98,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        index = self.hash_index(key)
+        self.list[index] = None
 
     def get(self, key):
         """
@@ -104,7 +110,12 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        if key:
+            print(self.list[self.hash_index(key)].value)
+            # return self.list[self.hash_index(key)].value
 
+        else:
+            return None
 
     def resize(self, new_capacity):
         """
@@ -114,7 +125,6 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
 
 
 if __name__ == "__main__":
