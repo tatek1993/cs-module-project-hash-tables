@@ -83,9 +83,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
         index = self.hash_index(key)
-        print(f"{key} -> {index}")
+        current = self.list[index]
+        while current:
+            if current.key == key:
+                current.value = value
+                return value
+            current = current.next
+
         hash_entry = HashTableEntry(key, value)
         self.list[index] = hash_entry
 
@@ -110,9 +115,9 @@ class HashTable:
         Implement this.
         """
         # Your code here
-        if key:
-            print(self.list[self.hash_index(key)].value)
-            # return self.list[self.hash_index(key)].value
+        if key and self.list[self.hash_index(key)]:
+            # print(self.list[self.hash_index(key)].value)
+            return self.list[self.hash_index(key)].value
 
         else:
             return None
