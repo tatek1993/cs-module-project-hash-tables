@@ -73,7 +73,7 @@ class HashTable:
         self.capacity = capacity
         self.list = [None] * capacity
 
-        # def get_num_slots(self):
+    def get_num_slots(self):
         """
         Return the length of the list you're using to hold the hash
         table data. (Not the number of items stored in the hash table,
@@ -84,6 +84,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        return self.capacity
 
     def get_load_factor(self):
         """
@@ -182,6 +183,21 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        ## Step 1: make a new array, double the size of the old one
+        ## Step 2: iterate through old array, and iterate old linked lists
+        ## Step 3: insert into new array, same way we did in the old array
+        self.capacity = new_capacity
+        old_list = self.list
+        self.list = [None] * new_capacity
+
+        for x in old_list:
+            if x:
+                current = x.head
+                while current:
+                    self.put(current.key, current.value)
+                    current = current.next
+
+        # if (number of items)/new_capacity >= 0.7:
 
 
 if __name__ == "__main__":
