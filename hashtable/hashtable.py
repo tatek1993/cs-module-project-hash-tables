@@ -48,12 +48,16 @@ class LinkedList:
     def delete(self, key):
         # index = self.hash_index(key)
         # self.list[index] = None
+        prev = None
         current = self.head
         while current:
             if current.key == key:
-                self.head = self.head.next
-                current.next = None
-                return
+                if current == self.head:
+                    self.head = self.head.next
+                    current.next = None
+                else:
+                    prev.next = current.next
+            prev = current
             current = current.next
 
 
@@ -163,7 +167,9 @@ class HashTable:
         # Your code here
         if key and self.list[self.hash_index(key)]:
             # print(self.list[self.hash_index(key)].value)
-            return self.list[self.hash_index(key)].find(key).value
+
+            if self.list[self.hash_index(key)].find(key):
+                return self.list[self.hash_index(key)].find(key).value
 
         else:
             return None
