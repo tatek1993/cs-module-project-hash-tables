@@ -1,6 +1,14 @@
 def no_dups(s):
     # Your code here
-
+    s = s.split(' ')
+    already_seen = {}
+    for word in s:
+        if word not in already_seen:
+            already_seen[word] = 1
+        else:
+            pass
+        new_string = ' '.join(already_seen)
+    return new_string
 
 
 if __name__ == "__main__":
