@@ -12,6 +12,55 @@ class HashTableEntry:
 MIN_CAPACITY = 8
 
 
+class LinkedList:
+    def __init__(self):
+        self.head = None
+        self.tail = None
+
+    def find(self, key):
+        current = self.head
+
+        while current is not None:
+            if current.key == key:
+                return current
+            current = current.next
+
+        return current
+
+    def update_or_else_insert_at_head(self, key, value):
+        # check if the key is already in the linked list
+        # find the node
+        current = self.head
+        while current is not None:
+            # if key is found, change the value
+            if current.key == key:
+                current.value = value
+                # exit function immediately
+                return
+            current = current.next
+
+        # if we reach the end of the list, it's not here!
+        # make a new node, and insert at head
+        new_node = HashTableEntry(key, value)
+        new_node.next = self.head
+        self.head = new_node
+
+    def delete(self, key):
+        # index = self.hash_index(key)
+        # self.list[index] = None
+        prev = None
+        current = self.head
+        while current:
+            if current.key == key:
+                if current == self.head:
+                    self.head = self.head.next
+                    current.next = None
+                else:
+                    prev.next = current.next
+            prev = current
+            current = current.next
+
+
 class HashTable:
     """
     A hash table that with `capacity` buckets
@@ -19,10 +68,10 @@ class HashTable:
 
     Implement this.
     """
-
     def __init__(self, capacity):
         # Your code here
-
+        self.capacity = capacity
+        self.list = [None] * capacity
 
     def get_num_slots(self):
         """
@@ -35,7 +84,7 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        return self.capacity
 
     def get_load_factor(self):
         """
@@ -44,7 +93,6 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
 
     def fnv1(self, key):
         """
@@ -55,7 +103,6 @@ class HashTable:
 
         # Your code here
 
-
     def djb2(self, key):
         """
         DJB2 hash, 32-bit
@@ -64,6 +111,10 @@ class HashTable:
         """
         # Your code here
 
+        hash = 5381
+        for x in key:
+            hash = (hash * 33) + ord(x)
+        return hash
 
     def hash_index(self, key):
         """
@@ -82,7 +133,17 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        current = self.list[index]
+        if current == None:
+            self.list[index] = LinkedList()
+        self.list[index].update_or_else_insert_at_head(key, value)
+        # if current.value !== None:
+        #     current.value = LinkedList().head
+        #     HashTableEntry(key, value).next = current.value
 
+        # hash_entry = HashTableEntry(key, value)
+        # self.list[index] = hash_entry
 
     def delete(self, key):
         """
@@ -93,7 +154,8 @@ class HashTable:
         Implement this.
         """
         # Your code here
-
+        index = self.hash_index(key)
+        self.list[index].delete(key)
 
     def get(self, key):
         """
@@ -104,7 +166,14 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        if key and self.list[self.hash_index(key)]:
+            # print(self.list[self.hash_index(key)].value)
 
+            if self.list[self.hash_index(key)].find(key):
+                return self.list[self.hash_index(key)].find(key).value
+
+        else:
+            return None
 
     def resize(self, new_capacity):
         """
@@ -114,7 +183,21 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        ## Step 1: make a new array, double the size of the old one
+        ## Step 2: iterate through old array, and iterate old linked lists
+        ## Step 3: insert into new array, same way we did in the old array
+        self.capacity = new_capacity
+        old_list = self.list
+        self.list = [None] * new_capacity
 
+        for x in old_list:
+            if x:
+                current = x.head
+                while current:
+                    self.put(current.key, current.value)
+                    current = current.next
+
+        # if (number of items)/new_capacity >= 0.7:
 
 
 if __name__ == "__main__":
